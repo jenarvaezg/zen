@@ -23,9 +23,20 @@ export class Simulation {
     this._onResize = () => this.resize();
     this._onMove = e => { this.mouse.x = e.clientX * this.dpr; this.mouse.y = e.clientY * this.dpr; this.mouse.active = true; };
     this._onLeave = () => { this.mouse.active = false; };
+    this._onTouchMove = e => {
+      const t = e.touches[0];
+      if(!t) return;
+      this.mouse.x = t.clientX * this.dpr;
+      this.mouse.y = t.clientY * this.dpr;
+      this.mouse.active = true;
+    };
     addEventListener('resize', this._onResize, { passive: true });
     addEventListener('mousemove', this._onMove, { passive: true });
     addEventListener('mouseout', this._onLeave, { passive: true });
+    addEventListener('touchstart', this._onTouchMove, { passive: true });
+    addEventListener('touchmove', this._onTouchMove, { passive: true });
+    addEventListener('touchend', this._onLeave, { passive: true });
+    addEventListener('touchcancel', this._onLeave, { passive: true });
     this.resize();
   }
 
@@ -86,6 +97,10 @@ export class Simulation {
     removeEventListener('resize', this._onResize);
     removeEventListener('mousemove', this._onMove);
     removeEventListener('mouseout', this._onLeave);
+    removeEventListener('touchstart', this._onTouchMove);
+    removeEventListener('touchmove', this._onTouchMove);
+    removeEventListener('touchend', this._onLeave);
+    removeEventListener('touchcancel', this._onLeave);
   }
 
   step(dt){
