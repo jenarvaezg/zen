@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>zen — un rincón para no hacer nada</title>
+<meta name="description" content="Un jardín de piedras que flotan, caen y responden al ratón. Ajusta la gravedad, la velocidad y el rebote a tu gusto y déjalo correr.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23C9AD8C'/%3E%3Ccircle cx='24' cy='24' r='9' fill='%23E4D3B8' opacity='.6'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <canvas id="scene" aria-hidden="true"></canvas>
+
+  <h1 class="wordmark">zen</h1>
+
+  <button id="panel-toggle" type="button" aria-expanded="false" aria-controls="panel" aria-label="Abrir ajustes">
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+      <circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <path d="M12 3.5v3M12 17.5v3M20.5 12h-3M6.5 12h-3M17.7 6.3l-2.1 2.1M8.4 15.6l-2.1 2.1M17.7 17.7l-2.1-2.1M8.4 8.4L6.3 6.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+  </button>
+
+  <aside id="panel" hidden>
+    <header class="panel-head">
+      <h2>Ajustes</h2>
+      <button id="panel-close" type="button" aria-label="Cerrar ajustes">&times;</button>
+    </header>
+
+    <div class="panel-body">
+
+      <section class="group">
+        <p class="group-label">Piedras</p>
+        <label class="row">
+          <span>Cantidad</span>
+          <input type="range" id="count" min="10" max="220" step="1">
+          <output for="count"></output>
+        </label>
+        <label class="row">
+          <span>Tamaño</span>
+          <input type="range" id="size" min="4" max="20" step="0.5">
+          <output for="size"></output>
+        </label>
+      </section>
+
+      <section class="group">
+        <p class="group-label">Física</p>
+        <label class="row">
+          <span>Gravedad</span>
+          <input type="range" id="gravity" min="-1" max="1" step="0.05">
+          <output for="gravity"></output>
+        </label>
+        <label class="row">
+          <span>Velocidad</span>
+          <input type="range" id="speed" min="0.2" max="2.5" step="0.1">
+          <output for="speed"></output>
+        </label>
+        <label class="row">
+          <span>Rebote</span>
+          <input type="range" id="bounce" min="0" max="1" step="0.05">
+          <output for="bounce"></output>
+        </label>
+        <label class="row toggle">
+          <span>Choques entre piedras</span>
+          <input type="checkbox" id="collisions">
+        </label>
+      </section>
+
+      <section class="group">
+        <p class="group-label">El ratón</p>
+        <label class="row">
+          <span>Reacción</span>
+          <select id="mouseMode">
+            <option value="none">Ninguna</option>
+            <option value="repel">Repeler</option>
+            <option value="attract">Atraer</option>
+          </select>
+        </label>
+        <label class="row">
+          <span>Fuerza</span>
+          <input type="range" id="mouseStrength" min="0.05" max="1" step="0.05">
+          <output for="mouseStrength"></output>
+        </label>
+        <label class="row">
+          <span>Radio</span>
+          <input type="range" id="mouseRadius" min="60" max="420" step="10">
+          <output for="mouseRadius"></output>
+        </label>
+      </section>
+
+      <section class="group">
+        <p class="group-label">Hilos</p>
+        <label class="row toggle">
+          <span>Conectar piedras cercanas</span>
+          <input type="checkbox" id="links">
+        </label>
+        <label class="row">
+          <span>Distancia</span>
+          <input type="range" id="linkDistance" min="40" max="220" step="10">
+          <output for="linkDistance"></output>
+        </label>
+      </section>
+
+      <section class="group">
+        <p class="group-label">Aspecto</p>
+        <label class="row">
+          <span>Paleta</span>
+          <select id="palette">
+            <option value="arena">Arena</option>
+            <option value="musgo">Musgo</option>
+            <option value="atardecer">Atardecer</option>
+            <option value="pizarra">Pizarra</option>
+            <option value="reveni">Reveni</option>
+          </select>
+        </label>
+        <label class="row">
+          <span>Tema</span>
+          <select id="theme">
+            <option value="auto">Auto</option>
+            <option value="light">Claro</option>
+            <option value="dark">Oscuro</option>
+          </select>
+        </label>
+      </section>
+
+      <button id="reset" type="button" class="reset-btn">Restablecer</button>
+    </div>
+  </aside>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
