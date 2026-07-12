@@ -15,13 +15,22 @@ export const PALETTES = {
     light: ['#6B7280', '#5F6B73', '#8A94A6', '#4A525C', '#9AA5B1'],
     dark:  ['#8A94A2', '#727F8A', '#9BA8B8', '#5B6570', '#AAB6C0'],
   },
+  // porra's bgNet: every dot Reveni orange, links always mint
   reveni: {
-    light: ['#F28536', '#6CE869', '#2E7D5B', '#C9702E', '#3FA6A6'],
-    dark:  ['#F2954C', '#7DEE7A', '#4A9A73', '#D6873F', '#54B9B9'],
+    light: ['#C9702E'],
+    dark:  ['#F28536'],
+    link:  { light: '#2E7D5B', dark: '#6CE869' },
   },
 };
 
 export function ballColors(paletteName, theme){
   const p = PALETTES[paletteName] || PALETTES.arena;
   return theme === 'dark' ? p.dark : p.light;
+}
+
+// palettes may pin a single link color (porra style); null -> use each ball's color
+export function linkColor(paletteName, theme){
+  const p = PALETTES[paletteName] || PALETTES.arena;
+  if(!p.link) return null;
+  return theme === 'dark' ? p.link.dark : p.link.light;
 }

@@ -1,8 +1,13 @@
-import { ballColors } from './palettes.js';
+import { ballColors, linkColor } from './palettes.js';
 
 const GRAVITY_SCALE = 640; // px/s^2 per unit of state.gravity
-const BASE_MAX_SPEED = 42; // px/s at speed=1, gravity=0 — matches the original ambient network's drift ceiling
+// porra's bgNet integrates per-frame (.68 px/frame cap, ±.11 px/frame drift);
+// on the 120Hz ProMotion displays it's experienced on that is ~82 px/s and
+// ±13.2 px/s. These per-second constants bake that in.
+const BASE_MAX_SPEED = 82; // px/s at speed=1, gravity=0
+const DRIFT_SPEED = 26.4;  // px/s span of the initial random velocity
 const REST_EPS = 6;        // px/s, below this + resting on floor -> extra floor friction
+const FLAT_R = 3.5;        // CSS px; dots up to this radius render flat like bgNet
 
 export class Simulation {
   constructor(canvas, state){
@@ -44,8 +49,8 @@ export class Simulation {
       this.balls.push({
         x: Math.random() * this.w,
         y: Math.random() * this.h,
-        vx: (Math.random() - 0.5) * 13.2 * this.dpr,
-        vy: (Math.random() - 0.5) * 13.2 * this.dpr,
+        vx: (Math.random() - 0.5) * DRIFT_SPEED * this.dpr,
+        vy: (Math.random() - 0.5) * DRIFT_SPEED * this.dpr,
         r,
         hue: Math.floor(Math.random() * 5),
       });
@@ -189,6 +194,7 @@ export class Simulation {
 
     if(s.links){
       const lk = s.linkDistance * dpr;
+      const link = linkColor(s.palette, s.theme);
       ctx.lineWidth = dpr;
       for(let i = 0; i < this.balls.length; i++){
         const a = this.balls[i];
@@ -196,7 +202,7 @@ export class Simulation {
           const b = this.balls[j];
           const dx = a.x - b.x, dy = a.y - b.y, d = Math.hypot(dx, dy);
           if(d < lk){
-            ctx.strokeStyle = hexA(colors[a.hue % colors.length], 0.28 * (1 - d / lk));
+            ctx.strokeStyle = hexA(link || colors[a.hue % colors.length], 0.22 * (1 - d / lk));
             ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
           }
         }
@@ -205,11 +211,11 @@ export class Simulation {
 
     if(s.mouseMode !== 'none' && this.mouse.active){
       const mr = s.mouseRadius * dpr;
-      ctx.lineWidth = 1.1 * dpr;
+      ctx.lineWidth = 1.2 * dpr;
       for(const b of this.balls){
         const dx = b.x - this.mouse.x, dy = b.y - this.mouse.y, d = Math.hypot(dx, dy);
         if(d < mr){
-          ctx.strokeStyle = hexA(colors[b.hue % colors.length], 0.45 * (1 - d / mr));
+          ctx.strokeStyle = hexA(colors[b.hue % colors.length], 0.55 * (1 - d / mr));
           ctx.beginPath(); ctx.moveTo(b.x, b.y); ctx.lineTo(this.mouse.x, this.mouse.y); ctx.stroke();
         }
       }
@@ -217,6 +223,15 @@ export class Simulation {
 
     for(const b of this.balls){
       const color = colors[b.hue % colors.length];
+
+      if(b.r < FLAT_R * dpr){
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, b.r, 0, 6.2832);
+        ctx.fillStyle = hexA(color, 0.9);
+        ctx.fill();
+        continue;
+      }
+
       ctx.beginPath();
       ctx.ellipse(b.x + b.r * 0.35, b.y + b.r * 0.55, b.r * 0.9, b.r * 0.5, 0, 0, 6.2832);
       ctx.fillStyle = s.theme === 'dark' ? 'rgba(0,0,0,.45)' : 'rgba(50,38,24,.18)';

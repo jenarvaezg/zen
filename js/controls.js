@@ -1,17 +1,19 @@
 const STORAGE_KEY = 'zen:settings';
 
-// Defaults reproduce the original bgNet effect's exact feel: no gravity, no
-// ball-to-ball collisions, fully elastic wall bounce, and particles gently
-// pulled toward the cursor rather than pushed away.
+// Defaults reproduce the original bgNet effect's exact feel as experienced on
+// a 120Hz ProMotion display (bgNet steps per-frame, so it runs 2x its nominal
+// 60Hz values there): tiny flat 2.2px dots, no gravity, no ball-to-ball
+// collisions, fully elastic wall bounce, and particles gently pulled toward
+// the cursor rather than pushed away.
 export const DEFAULTS = {
   count: 60,
-  size: 10,
+  size: 2.2,
   gravity: 0,
   speed: 1,
   bounce: 1,
   collisions: false,
   mouseMode: 'attract',
-  mouseStrength: 0.24,
+  mouseStrength: 0.5,
   mouseRadius: 200,
   links: true,
   linkDistance: 138,
